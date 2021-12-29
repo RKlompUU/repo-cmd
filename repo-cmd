@@ -1,12 +1,31 @@
 #!/usr/bin/env bash
 
-editor=${EDITOR:-nano}
+if [[ "$#" -lt 1 ]]; then
+    echo "usage: repo-cmd COMMAND [COMMAND_ARG]
+
+where COMMAND is one of:
+- edit
+- print
+- notes.<any extension>
+- any command specified in the repo commands' script
+
+# edit
+modify the repo commands' script
+
+# print
+print all commands available (and all so far written notes extensions)
+
+# notes.<any extension>
+open an editor for quick notes (or eg for storing some useful database queries)
+"
+    exit 1
+fi
 
 cmd_dir=~/.local/repo-cmd/`git rev-parse --show-toplevel`
 [ "$?" -eq "0" ] || exit 1
 
-if [[ ! -f $cmd_dir/exec.bash ]]; then
-    mkdir -p $cmd_dir
+if [[ ! -f "$cmd_dir"/exec.bash ]]; then
+    mkdir -p "$cmd_dir"
     echo \
 '#!/usr/bin/env bash
 
@@ -15,26 +34,28 @@ case $1 in
     echo "$1 not implemented"
     ;;
 esac
-' > $cmd_dir/exec.bash || exit 1
-    chmod +x $cmd_dir/exec.bash || exit 1
+' > "$cmd_dir"/exec.bash || exit 1
+    chmod +x "$cmd_dir"/exec.bash || exit 1
 fi
+
+editor=${EDITOR:-nano}
 
 case $1 in
 edit)
-    $editor $cmd_dir/exec.bash
+    $editor "$cmd_dir"/exec.bash
     ;;
 print)
     if [[ $# -gt 1 ]]; then
-        sed -n "/^\s*$2)/,/;;/p" $cmd_dir/exec.bash
+        sed -n "/^\s*$2)/,/;;/p" "$cmd_dir"/exec.bash
     else
-        grep ')$' $cmd_dir/exec.bash
-        echo notes: `ls $cmd_dir | grep "notes"`
+        grep ')$' "$cmd_dir"/exec.bash
+        echo notes: `ls "$cmd_dir" | grep "notes"`
     fi
     ;;
 notes.*)
-    $EDITOR $cmd_dir/notes.${1#"notes."}
+    $editor "$cmd_dir/notes.${1#'notes.'}"
     ;;
 *)
-    $cmd_dir/exec.bash "$@"
+    "$cmd_dir"/exec.bash "$@"
     ;;
 esac
