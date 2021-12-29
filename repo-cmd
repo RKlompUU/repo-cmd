@@ -2,16 +2,12 @@
 
 editor=${EDITOR:-nano}
 
-cd `git rev-parse --show-toplevel 2> /dev/null`
-cmd_dir=~/.local/repo-cmd/$PWD
+cmd_dir=~/.local/repo-cmd/`git rev-parse --show-toplevel`
+[ "$?" -eq "0" ] || exit 1
 
-unknown_msg="Unknown repo (pwd=$PWD), instantiate with 'edit' command"
-
-case $1 in
-edit)
+if [[ ! -f $cmd_dir/exec.bash ]]; then
     mkdir -p $cmd_dir
-    if [[ ! -f $cmd_dir/exec.bash ]]; then
-        echo \
+    echo \
 '#!/usr/bin/env bash
 
 case $1 in
@@ -20,14 +16,14 @@ case $1 in
     ;;
 esac
 ' > $cmd_dir/exec.bash || exit 1
-        chmod +x $cmd_dir/exec.bash || exit 1
-    fi
+    chmod +x $cmd_dir/exec.bash || exit 1
+fi
 
-    $EDITOR $cmd_dir/exec.bash
+case $1 in
+edit)
+    $editor $cmd_dir/exec.bash
     ;;
 print)
-    [[ ! -f $cmd_dir/exec.bash ]] && echo "$UNKNOWN_MSG" && exit 1
-
     if [[ $# -gt 1 ]]; then
         sed -n "/^\s*$2)/,/;;/p" $cmd_dir/exec.bash
     else
@@ -36,13 +32,9 @@ print)
     fi
     ;;
 notes.*)
-    [[ ! -d $cmd_dir ]] && echo "$UNKNOWN_MSG" && exit 1
-
     $EDITOR $cmd_dir/notes.${1#"notes."}
     ;;
 *)
-    [[ ! -f $cmd_dir/exec.bash ]] && echo "$UNKNOWN_MSG" && exit 1
-
     $cmd_dir/exec.bash "$@"
     ;;
 esac
