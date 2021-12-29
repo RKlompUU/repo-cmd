@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+editor=${EDITOR:-nano}
+
+cd `git rev-parse --show-toplevel 2> /dev/null`
+cmd_dir=~/.local/repo-cmd/$PWD
+
+unknown_msg="Unknown repo (pwd=$PWD), instantiate with 'edit' command"
+
+case $1 in
+edit)
+    mkdir -p $cmd_dir
+    if [[ ! -f $cmd_dir/exec.bash ]]; then
+        echo \
+'#!/usr/bin/env bash
+
+case $1 in
+*)
+    echo "$1 not implemented"
+    ;;
+esac
+' > $cmd_dir/exec.bash || exit 1
+        chmod +x $cmd_dir/exec.bash || exit 1
+    fi
+
+    $EDITOR $cmd_dir/exec.bash
+    ;;
+print)
+    [[ ! -f $cmd_dir/exec.bash ]] && echo "$UNKNOWN_MSG" && exit 1
+
+    if [[ $# -gt 1 ]]; then
+        sed -n "/^\s*$2)/,/;;/p" $cmd_dir/exec.bash
+    else
+        grep ')$' $cmd_dir/exec.bash
+        echo notes: `ls $cmd_dir | grep "notes"`
+    fi
+    ;;
+notes.*)
+    [[ ! -d $cmd_dir ]] && echo "$UNKNOWN_MSG" && exit 1
+
+    $EDITOR $cmd_dir/notes.${1#"notes."}
+    ;;
+*)
+    [[ ! -f $cmd_dir/exec.bash ]] && echo "$UNKNOWN_MSG" && exit 1
+
+    $cmd_dir/exec.bash "$@"
+    ;;
+esac
