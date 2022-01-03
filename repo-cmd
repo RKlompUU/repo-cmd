@@ -21,7 +21,9 @@ open an editor for quick notes (or eg for storing some useful database queries)
     exit 1
 fi
 
-cmd_dir=~/.local/repo-cmd/`git rev-parse --show-toplevel`
+repo_root=`git rev-parse --show-toplevel`
+cd "$repo_root"
+cmd_dir=~/.local/repo-cmd/"$repo_root"
 [ "$?" -eq "0" ] || exit 1
 
 if [[ ! -f "$cmd_dir"/exec.bash ]]; then
