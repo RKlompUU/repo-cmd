@@ -38,7 +38,7 @@ esac
     chmod +x "$cmd_dir"/exec.bash || exit 1
 fi
 
-editor=${EDITOR:-nano}
+editor=${EDITOR:-vim}
 
 case $1 in
 edit)
