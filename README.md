@@ -87,6 +87,12 @@ cart-add)
     ;;
 ```
 
+## notes
+
+`repo-cmd` always first changes directory to the git project root directory.
+So, at entrypoint of all of your custom commands, $PWD will always point to
+this root entrypoint.
+
 # Notes feature
 
 `repo-cmd` additionally provides a way to make notes in 1 file per extension,
