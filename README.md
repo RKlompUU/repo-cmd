@@ -1,7 +1,7 @@
 # repo-cmd
 
 Repo-cmd provides a simple framework for any scripting logic related to a git
-repository, that should stay outside of the repository. For example to provide
+repository, that should stay outside of the repository. For example, to provide
 secrets, or to specify some scripting logic that is still half-baked / in some
 way not yet ready to be shared with fellow programmers.
 
