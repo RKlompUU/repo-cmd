@@ -31,8 +31,8 @@ to a directory that is in your $PATH.
 
 # Example usage
 
-In one of your git projects, add a command that launches a Dockerized postgres
-database:
+In one of your git projects, add a command (with `repo-cmd edit`) that launches
+a Dockerized postgres database:
 ```
 testdb)
     docker run \
@@ -43,7 +43,7 @@ testdb)
         postgres
     ;;
 ```
-(Inside the `switch`).
+(Inside the `case`).
 
 And then add another command that connects to this database with `psql`:
 ```
@@ -62,9 +62,34 @@ inside a terminal that is somewhere inside your git project with
 `repo-cmd testdb`. With `repo-cmd db` you can then connect to this database in
 another terminal session.
 
+Anything goes. Maybe you want to write some convenience wrapper around API
+calls you're performing with something like `curl` or `httpie`, eg:
+```
+login)
+    username=$2
+    password=$3
+
+    response=`http POST https://your_api.com/login <<EOF
+{
+    "username": "$username",
+    "password": "$password"
+}
+EOF`
+    echo "$response" | jq -r '.token'
+    ;;
+cart-add)
+    item_id=$2
+
+    token=`repo-cmd login someUser somePassword`
+    http https://your_api.com/cart/add/$item_id Authorization:"Bearer $token"
+    ;;
+```
+
 # Notes feature
 
 `repo-cmd` additionally provides a way to make notes in 1 file per extension,
-by executing `repo-cmd notes.<extension>`. For example, I use this a lot to
-write and store one-off SQL queries with `repo-cmd notes.sql`, and for some
-projects I may use `repo-cmd notes.txt` to store findings.
+by executing `repo-cmd notes.<extension>`.
+
+For example, I use this a lot to write and store one-off SQL queries with
+`repo-cmd notes.sql`, and for some projects I may use `repo-cmd notes.txt` to
+store findings.
