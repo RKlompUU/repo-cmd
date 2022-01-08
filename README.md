@@ -90,8 +90,8 @@ cart-add)
 ## notes
 
 `repo-cmd` always first changes directory to the git project root directory.
-So, at entrypoint of all of your custom commands, $PWD will always point to
-this root entrypoint.
+So, at entrypoint of all of your custom commands, $PWD will always be that
+git root directory.
 
 # Notes feature
 
