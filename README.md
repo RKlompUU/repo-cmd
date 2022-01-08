@@ -95,8 +95,8 @@ this root entrypoint.
 
 # Notes feature
 
-`repo-cmd` additionally provides a way to make notes in 1 file per extension,
-by executing `repo-cmd notes.<extension>`.
+`repo-cmd` additionally provides a way to make notes in 1 file per extension
+per git project, by executing `repo-cmd notes.<extension>`.
 
 For example, I use this a lot to write and store one-off SQL queries with
 `repo-cmd notes.sql`, and for some projects I may use `repo-cmd notes.txt` to
