@@ -66,6 +66,7 @@ Anything goes. Maybe you want to write some convenience wrapper around API
 calls you're performing with something like `curl` or `httpie`, eg:
 ```
 login)
+    set -u
     username=$2
     password=$3
 
@@ -78,6 +79,7 @@ EOF`
     echo "$response" | jq -r '.token'
     ;;
 cart-add)
+    set -u
     item_id=$2
 
     token=`repo-cmd login someUser somePassword`
