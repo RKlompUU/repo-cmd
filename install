@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+sudo cp -v -i repo-cmd /usr/bin/repo-cmd || exit 1
+
+fallback_completion_dir=~/.local/share/bash-completion/completions
+if [ -z $BASH_COMPLETION_USER_DIR ]; then
+    [ -d $fallback_completion_dir ] || mkdir -p $fallback_completion_dir || exit 1
+    BASH_COMPLETION_USER_DIR=$fallback_completion_dir
+fi
+
+cp -v -i bash_completion $BASH_COMPLETION_USER_DIR/repo-cmd

@@ -1,0 +1,35 @@
+_completion() {
+	local prev cur opts
+	COMPREPLY=()
+
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+	cur="${COMP_WORDS[COMP_CWORD]}"
+
+	cword=$COMP_CWORD
+	if [ $prev == "print" ]; then
+		cword=$(( cword - 1 ))
+	fi
+
+	opts_indent=''
+	if [ $cword -gt 1 ]; then
+		indent=$(( (cword - 1) * 4 ))
+		opts_indent=`printf '\\ %.0s' $(seq 1 $indent)`
+	fi
+
+		# sed "/^\s*$prev/,/"
+	custom_cmds=`\
+		repo-cmd print 2>/dev/null | \
+		sed 's/)$//' | \
+	       	sed 's/^notes:\ //' | \
+	       	grep --invert-match --regexp "^$opts_indent\ " | \
+	       	grep --invert-match --regexp '^\s*\*$' | \
+	       	grep --regexp "^$opts_indent[^\ ]"`
+	opts="`echo ${custom_cmds}`"
+	if [ $COMP_CWORD -eq 1 ]; then
+		opts="$opts print edit"
+	fi
+
+	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+	return 0
+}
+complete -F _completion repo-cmd
