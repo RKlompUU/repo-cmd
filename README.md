@@ -26,7 +26,8 @@ in the git repo itself.
 
 # Installation
 
-Simply execute the install bash script. This will place the repo-cmd in /usr/bin/. It will additionally install a bash_completion script inside either $BASH_COMPLETION_USER_DIR or if this is not set in ~/.local/share/bash_completion/.
+Simply execute the `install` bash script. This will place the repo-cmd in /usr/bin/. It will additionally install a bash_completion script inside either $BASH_COMPLETION_USER_DIR or if this is not set in ~/.local/share/bash_completion/.
+
 For bash completions to work, make sure you've installed (bash-completion)[https://github.com/scop/bash-completion].
 
 # Example usage
